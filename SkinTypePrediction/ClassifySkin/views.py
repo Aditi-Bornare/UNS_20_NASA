@@ -21,15 +21,17 @@ def classification_view(request):
     from scipy.fftpack import ifft
     from scipy import fft
     import cv2
-    import matplotlib.pyplot as plt
+    import matplotlib
+    matplotlib.use('Agg')
+    from matplotlib import pyplot as plt
     import os
     from tqdm import tqdm
     import seaborn as sns
     from itertools import chain
     from sklearn.model_selection import train_test_split
 
-    sns.set(style="whitegrid")
     # Reading images in grayscale
+    sns.set(style="whitegrid")
     oilydata = cv2.imread("static/images/oily(6).jpeg",cv2.IMREAD_GRAYSCALE)
     drydata = cv2.imread("static/images/dry(35).jpg",cv2.IMREAD_GRAYSCALE)
     fig , axs = plt.subplots(1,2,figsize=(10,10))
@@ -37,8 +39,7 @@ def classification_view(request):
     axs[0].set_title('dry')
     axs[1].imshow(oilydata,cmap='gray')
     axs[1].set_title('oily')
-    plt.show()
-    plt.close()
+    # #plt.savefig("plot1")
 
     # To transform images into signals we reduce image sizes
     # and used a flatten fucntion to convert them from 2-D into 1-D array
@@ -52,15 +53,13 @@ def classification_view(request):
     axs[0].set_title('DRY')
     axs[1].plot(oflatten_list)
     axs[1].set_title('OILY')
-    plt.show()
-    plt.close()
+    # #plt.savefig("plot2")
 
     # comparing probability distributions
     fig,axs = plt.subplots(1,2,figsize=(12,4),sharex=True)
     sns.distplot(dflatten_list,ax=axs[0],color='Red').set_title('DRY')
     sns.distplot(oflatten_list,ax=axs[1],color='Green').set_title('OILY')
-    plt.show()
-    plt.close()
+    # #plt.savefig("plot3")
 
     # We are looking for small hiden informations on these
     # images so the ideal type of filter is LOWPASS FILTER.
@@ -76,8 +75,7 @@ def classification_view(request):
     axs[1].set_xlabel('Frequency')
     axs[0].set_ylabel('Power')
     axs[1].set_ylabel('Power')
-    plt.show()
-    plt.close()
+    # #plt.savefig("plot4")
     sos = signal.iirfilter(3, Wn=0.01, rs=0.06 ,fs=100,btype='lp',output='sos',
                            analog=False, ftype='cheby2')
     w, h = signal.sosfreqz(sos, worN=100)
@@ -98,8 +96,7 @@ def classification_view(request):
                [r'$-\pi$', r'$-\pi/2$', '0', r'$\pi/2$', r'$\pi$'])
     plt.ylabel('Phase [rad]')
     plt.xlabel('Normalized frequency (1.0 = Nyquist)')
-    plt.show()
-    plt.close()
+    # #plt.savefig("plot5")
 
     # Step response
     t, s = signal.step(sos)
@@ -108,8 +105,7 @@ def classification_view(request):
     axs.set_title('PSD')
     axs.set_xlabel('Frequency')
     axs.set_ylabel('Power')
-    plt.show()
-    plt.close()
+    # #plt.savefig("plot6")
 
     # Applying the filter to Signals
     fig, axs = plt.subplots(2, 2,figsize=(12,4), sharey=True,sharex=True)
@@ -123,8 +119,7 @@ def classification_view(request):
     axs[1,0].set_title('OILY')
     axs[1,1].plot(ofiltered)
     axs[1,1].set_title('OILY After 0.01 Hz low-pass filter')
-    plt.show()
-    plt.close()
+    #plt.savefig("plot7")
 
     # Power Spectral Density of filtered Signals
     dfreqs, dpsd = signal.welch(dfiltered)
@@ -138,8 +133,7 @@ def classification_view(request):
     axs[1].set_xlabel('Frequency')
     axs[0].set_ylabel('Power')
     axs[1].set_ylabel('Power')
-    plt.show()
-    plt.close()
+    #plt.savefig("plot8")
 
     # Periodogram of filtered Signsls
     fig,axs = plt.subplots(1,2,figsize=(12,4),sharey=True)
@@ -152,8 +146,7 @@ def classification_view(request):
     axs[0].set_xlabel('frequency [Hz]')
     axs[0].set_xlabel('frequency [Hz]')
     axs[0].set_ylabel('PSD [V**2/Hz]')
-    plt.show()
-    plt.close()
+    #plt.savefig("plot9")
 
     # Helper functions to find autocorrelation,
     # Root Mean Square and max values of an array
@@ -206,8 +199,7 @@ def classification_view(request):
     axs[1].plot(offt.imag, 'r--')
     axs[1].set_title('OILY')
     plt.legend(('real', 'imaginary'))
-    plt.show()
-    plt.close()
+    #plt.savefig("plot10")
 
     # Magnitude Spectrum for oily
     dft = cv2.dft(np.float32(oilydata),flags = cv2.DFT_COMPLEX_OUTPUT)
@@ -218,8 +210,7 @@ def classification_view(request):
     plt.title('ORIGINAL'), plt.xticks([]), plt.yticks([])
     plt.subplot(122),plt.imshow(magnitude_spectrum, cmap = 'gray')
     plt.title('Magnitude Spectrum'), plt.xticks([]), plt.yticks([])
-    plt.show()
-    plt.close()
+    #plt.savefig("plot11")
 
     # Magnitude Spectrum for dry
     dft = cv2.dft(np.float32(drydata),flags = cv2.DFT_COMPLEX_OUTPUT)
@@ -230,8 +221,7 @@ def classification_view(request):
     plt.title('ORIGINAL'), plt.xticks([]), plt.yticks([])
     plt.subplot(122),plt.imshow(magnitude_spectrum, cmap = 'gray')
     plt.title('Magnitude Spectrum'), plt.xticks([]), plt.yticks([])
-    plt.show()
-    plt.close()
+    #plt.savefig("plot13")
 
     # Apply Signal Processing to all images
     mpath = "static/images/dataset/"
@@ -329,7 +319,7 @@ def classification_view(request):
     def get_img2(folder):
         X=[]
         filename=os.listdir(folder)
-        print(filename)
+        # print(filename)
         img=cv2.imread(folder + '/' + filename[0],cv2.IMREAD_GRAYSCALE)
         img = cv2.resize(img,(IM_SIZE,IM_SIZE))
         dft = cv2.dft(np.float32(img),flags = cv2.DFT_COMPLEX_OUTPUT)
@@ -388,4 +378,6 @@ def classification_view(request):
         result="Dry"
     else:
         result="Oily"
-    return HttpResponse("Your skin is: "+result)
+    filename=os.listdir(npath)
+    os.remove(npath + '/' +filename[0])
+    return render(request, 'ClassifySkin/success.html', {'result' : result})
