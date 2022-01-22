@@ -22,6 +22,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     url(r'^$', views.index_view),
     path('classification_view', views.classification_view, name = 'classification_view'),
+    url(r'^plots/', views.plots_view),
 ]
 
 from django.conf import settings

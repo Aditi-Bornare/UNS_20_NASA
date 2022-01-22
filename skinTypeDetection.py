@@ -1,3 +1,10 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Sat Jan 22 14:07:07 2022
+
+@author: Srushti
+"""
+
 import numpy as np
 from sklearn.preprocessing import StandardScaler, MinMaxScaler
 from scipy import signal

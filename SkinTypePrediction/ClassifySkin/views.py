@@ -3,6 +3,10 @@ from django.shortcuts import render, redirect
 from . import forms
 
 # Create your views here.
+
+def plots_view(request):
+    return render(request, 'ClassifySkin/plots.html')
+
 def index_view(request):
     if request.method == 'POST':
         form = forms.SkinForm(request.POST, request.FILES)
