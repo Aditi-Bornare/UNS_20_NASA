@@ -310,7 +310,7 @@ def classification_view(request):
     model.compile(optimizer='adam',
                   loss='sparse_categorical_crossentropy',
                   metrics=['accuracy'])
-    model.fit(X_train_01, y_train, epochs=10)
+    model.fit(X_train_01, y_train, epochs=200)
 
     val_loss, val_acc = model.evaluate(X_test_01, y_test)
     print(f'Validation loss: {val_loss}')
