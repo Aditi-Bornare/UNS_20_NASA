@@ -11,6 +11,8 @@ from scipy import signal
 from scipy.fftpack import ifft
 from scipy import fft
 import cv2
+import matplotlib.pyplot
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import os
 from tqdm import tqdm
